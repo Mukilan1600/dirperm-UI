@@ -1,0 +1,26 @@
+<thead>
+  <tr class='folder_name_row' style="cursor:pointer" {{on 'click' this.toggleOpen}}>
+    <td colspan='7'>Folder: {{@folder_name}}</td>
+  </tr>
+  {{#if this.open}}
+    <tr>
+      <th rowspan='2'>User/Group name</th>
+      <th rowspan='2'>Type</th>
+      <th colspan='5'>Permissions</th>
+    </tr>
+    <tr>
+      <th style='padding: 0.3rem;'>Read</th>
+      <th style='padding: 0.3rem;'>Write</th>
+      <th style='padding: 0.3rem;'>Read and execute</th>
+      <th style='padding: 0.3rem;'>Modify</th>
+      <th style='padding: 0.3rem;'>Full control</th>
+    </tr>
+  {{/if}}
+</thead>
+<tbody>
+  {{#if this.open}}
+    {{#each @perms as |perm|}}
+      <CurrPerm @perm={{perm}} />
+    {{/each}}
+  {{/if}}
+</tbody>

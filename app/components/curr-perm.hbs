@@ -1,0 +1,34 @@
+<tr>
+  <td style='padding: 0.3rem'>
+    {{@perm.userName}}
+    <div style='color:{{if (eq @perm.accessType 'GRANT') 'green' 'red'}}'>{{@perm.accessType}}</div>
+  </td>
+  <td style='padding: 0.3rem'>
+    {{@perm.sidType}}
+  </td>
+  <td style='padding: 0.3rem;text-align:center;'>
+    {{#if @perm.read}}
+      <span style='margin-left: 5px;'>&#10004;</span>
+    {{/if}}
+  </td>
+  <td style='padding: 0.3rem;text-align:center;'>
+    {{#if @perm.write}}
+      <span style='margin-left: 5px;'>&#10004;</span>
+    {{/if}}
+  </td>
+  <td style='padding: 0.3rem;text-align:center;'>
+    {{#if @perm.readNExecute}}
+      <span style='margin-left: 5px;'>&#10004;</span>
+    {{/if}}
+  </td>
+  <td style='padding: 0.3rem;text-align:center;'>
+    {{#if (and (and (and @perm.can_delete @perm.readNExecute) @perm.read) @perm.write)}}
+      <span style='margin-left: 5px;'>&#10004;</span>
+    {{/if}}
+  </td>
+  <td style='padding: 0.3rem;text-align:center;'>
+    {{#if @perm.fullControl}}
+      <span style='margin-left: 5px;'>&#10004;</span>
+    {{/if}}
+  </td>
+</tr>

@@ -1,0 +1,113 @@
+<div class='jumbo'>
+  <h2>Get permissions</h2>
+  <div id='message'>{{this.msg}}</div>
+  <div>
+    <label for='folder_name'>Folder name: </label>
+    <Input id='folder_name' @value={{this.folder_name}} />
+  </div>
+  <button type='button' {{action 'onUpdatePermissions'}}>Update permissions</button>
+  <br />
+  <div>
+    <label for='level_select'>Level: </label>
+    <select name='level_select' id='level_select' value={{this.level}} {{on 'change' this.updateLevel}}>
+      {{#each (range 0 this.max_level true) as |dir_level|}}
+        <option value={{dir_level}}>{{dir_level}}</option>
+      {{/each}}
+    </select>
+  </div>
+  <br />
+  {{#if this.curr_dirs.length}}
+    Number of Folders: <b>{{this.curr_dirs.length}}</b>
+    <table id='permissions_table' border='true'>
+      {{#each this.curr_dirs as |dir_perm|}}
+        <DirPerm @folder_name={{dir_perm.folder_name}} @perms={{dir_perm.permissions}} />
+      {{/each}}
+    </table>
+  {{/if}}
+  <h2>Set permissions</h2>
+  <div>
+    <label for='set_folder_name'>Folder name: </label>
+    <Input id='set_folder_name' @value={{this.folder_name}} />
+  </div>
+  <div>
+    <label for='user_name'>User name: </label>
+    <Input id='user_name' @value={{this.user_name}} />
+  </div>
+  <div>
+    <span>Read</span>
+    <input
+      type='checkbox'
+      id='read_allow'
+      name='read'
+      {{on 'change' (fn this.updatePerms 'allow')}}
+      checked={{this.allow_perms.read}}
+    />
+    <label for='read_allow'>Allow</label>
+    <input
+      type='checkbox'
+      id='read_deny'
+      name='read'
+      {{on 'change' (fn this.updatePerms 'deny')}}
+      checked={{this.deny_perms.read}}
+    />
+    <label for='read_deny'>Deny</label>
+  </div>
+  <div>
+    <span>Write</span>
+    <input
+      type='checkbox'
+      id='write_allow'
+      name='write'
+      {{on 'change' (fn this.updatePerms 'allow')}}
+      checked={{this.allow_perms.write}}
+    />
+    <label for='write_allow'>Allow</label>
+    <input
+      type='checkbox'
+      id='write_deny'
+      name='write'
+      {{on 'change' (fn this.updatePerms 'deny')}}
+      checked={{this.deny_perms.write}}
+    />
+    <label for='write_deny'>Deny</label>
+  </div>
+  <div>
+    <span>Read and Execute</span>
+    <input
+      type='checkbox'
+      id='readNExecute_allow'
+      name='readNExecute'
+      {{on 'change' (fn this.updatePerms 'allow')}}
+      checked={{this.allow_perms.readNExecute}}
+    />
+    <label for='readNExecute_allow'>Allow</label>
+    <input
+      type='checkbox'
+      id='readNExecute_deny'
+      name='readNExecute'
+      {{on 'change' (fn this.updatePerms 'deny')}}
+      checked={{this.deny_perms.readNExecute}}
+    />
+    <label for='readNExecute_deny'>Deny</label>
+  </div>
+  <div>
+    <span>Delete</span>
+    <input
+      type='checkbox'
+      id='delete_allow'
+      name='can_delete'
+      {{on 'change' (fn this.updatePerms 'allow')}}
+      checked={{this.allow_perms.can_delete}}
+    />
+    <label for='delete_allow'>Allow</label>
+    <input
+      type='checkbox'
+      id='delete_deny'
+      name='can_delete'
+      {{on 'change' (fn this.updatePerms 'deny')}}
+      checked={{this.deny_perms.can_delete}}
+    />
+    <label for='delete_deny'>Deny</label>
+  </div>
+  <button type='button' {{action 'onSetPerms'}}>Set permissions</button>
+</div>
