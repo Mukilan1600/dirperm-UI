@@ -30,7 +30,7 @@ class Permissions {
   @tracked write;
   @tracked readNExecute;
   @tracked can_delete;
-  @tracked fullControl;
+  @tracked full_control;
   @tracked userName;
   @tracked sidType;
 
@@ -42,7 +42,7 @@ class Permissions {
     this.readNExecute = readNExecute;
     this.can_delete = can_delete;
     this.userName = userName;
-    this.fullControl = fullControl;
+    this.full_control = fullControl;
   }
 
   toJson() {
@@ -52,6 +52,7 @@ class Permissions {
       write: this.write,
       readNExecute: this.readNExecute,
       delete: this.can_delete,
+      fullControl: this.full_control,
       accessType: this.accessType,
     };
   }
@@ -63,52 +64,38 @@ export default class PermComponent extends Component {
   @tracked user_name = '';
   @tracked curr_perms = [];
   @tracked curr_dirs = [];
-  @tracked allow_perms = new Permissions('GRANT', false, false, false, false, '', '');
-  @tracked deny_perms = new Permissions('DENY', false, false, false, false, '', '');
-  @tracked max_level = 0;
-  @tracked level;
-
-  @action
-  async onUpdatePermissions() {
-    this.msg = '';
-    const fetch_url = 'http://localhost:8080/dirperm/updateperm';
-    const res = await fetch(fetch_url, {
-      method: 'POST',
-      body: JSON.stringify({ folder_name: this.folder_name }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const perms = await res.json();
-    this.msg = perms.msg;
-    setTimeout(() => (this.msg = ''), 3000);
-    this.max_level = 0;
-    this.max_level = perms.max_depth;
-    this.level = 0;
-    this.onGetPermissions();
-  }
+  @tracked allow_perms = new Permissions('GRANT', '', false, false, false, false, false, '');
+  @tracked deny_perms = new Permissions('DENY', '', false, false, false, false, false, '');
+  @tracked level = 0;
+  @tracked loading = false;
 
   @action
   async onGetPermissions() {
-    const fetch_url = `http://localhost:8080/dirperm/folderperm?depth=${this.level}`;
+    this.loading = true;
+    const fetch_url = `http://localhost:8080/dirperm/folderperm?depth=${
+      this.level
+    }&folder_name=${encodeURI(this.folder_name)}`;
     const res = await fetch(fetch_url);
     const dirs = await res.json();
     this.curr_dirs = dirs.map((dir) => {
       return new DirectoryPermissions(dir.folderName, dir.permissionEntries);
     });
+    if (this.curr_dirs.length == 0) this.msg = 'No folders at this level';
+    this.loading = false;
   }
 
   @action
   async onSetPermissions() {
-    this.allow_perms.fileName = this.folder_name;
-    this.deny_perms.fileName = this.folder_name;
     this.allow_perms.userName = this.user_name;
     this.deny_perms.userName = this.user_name;
 
     const fetch_url = `http://localhost:8080/dirperm/folderperm`;
     const res = await fetch(fetch_url, {
       method: 'POST',
-      body: JSON.stringify([this.allow_perms.toJson(), this.deny_perms.toJson()]),
+      body: JSON.stringify({
+        folderName: this.folder_name,
+        entries: [this.allow_perms.toJson(), this.deny_perms.toJson()],
+      }),
     });
 
     console.log(res.body);
@@ -132,6 +119,5 @@ export default class PermComponent extends Component {
   @action
   updateLevel(event) {
     this.level = event.target.value;
-    this.onGetPermissions();
   }
 }

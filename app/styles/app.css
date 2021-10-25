@@ -27,3 +27,16 @@
 .folder_name_row td{
       padding: 5px;
 }
+
+#set_permissions_table input[type="checkbox"]{
+      width: 15px;
+      height: 15px;
+}
+
+#set_permissions_table th{
+      padding: 0.4rem;
+}
+
+#set_permissions_table tr td:not(:nth-child(1)){
+      text-align: center;
+}
